@@ -1,7 +1,7 @@
 CronJobManager
 ==============
 
-A node-cron wrapper that manages many jobs at once. This is built using of [Nick Campbell's node-cron fork](https://github.com/ncb000gt/node-cron).
+A node-cron wrapper that manages many jobs at once. This is built using  [cron](https://www.npmjs.com/package/cron) as the underlying cron lib.
 
 Installation
 =============
@@ -25,7 +25,7 @@ manager = new CronJobManager( // this creates a new manager and adds the argumen
 () => { console.log("tick - what should be executed?") },
 {
 // extra options.. 
-// see https://github.com/ncb000gt/node-cron/blob/master/README.md for all available
+// see https://www.npmjs.com/package/cron for all available
   start:true,
   timeZone:"America/Los_Angeles",
   onComplete: () => {console.log("a_key_string_to_call_this_job has stopped....")}
@@ -53,11 +53,13 @@ var manager1 = new CronJobManager('a key to identify the job',
     timeZone:"Australia/Sydney"
   }),
 manager2 = new CronJobManager();
+dateToRun = new Date('2020-08-03T17:35:43-0400') // run the job at this time on this date.
+manager3 = new CronJob('a one-timer', dateToRun, () => { console.log('listen carefully.. I will say this only once!') }, options)
 ```
 the final options object is optional, these are options that are past to node-cron and they include the following:
   * start: true/false
   * onComplete: function - runs when the job is stopped
-  * timeZone: MUST have time installed for this work - see [the node-cron readme](https://github.com/ncb000gt/node-cron/blob/master/README.md) for more details.
+  
 
 Adding jobs
 ===
@@ -69,18 +71,22 @@ in this case, with the final options object left out of the arguments, the job w
 
 If the key you are using already exits in the manager, that key will be overwriten, the original job will stop and this one will  take its place. A warning will be printed to the log when this happens.
 
+In place of a cron expression, you can use a JS Date object.
+
 Starting Jobs
 ===
 To start a job you can use the *start* function
 ```javasctipt
 manager.start('key')
 ```
+
 Stopping Jobs
 ===
 Stopping is the same as start with the *stop* function
 ```javascript
 manager.stop('key')
 ```
+
 Stopping All Jobs
 ===
 To just stop all the jobs in the manager use *stopAll*
